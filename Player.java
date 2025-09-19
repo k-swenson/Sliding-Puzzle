@@ -1,21 +1,33 @@
 public class Player {
     private String name;
-    private int num_moves;
+    private int moves;
+
+    public Player() {
+        this("Player");
+    }
 
     public Player(String name) {
         this.name = name;
-        this.num_moves = 0;
+        this.moves = 0;
     }
 
     public String getName() {
         return name;
     }
 
+    public void changeName(String name) {
+        this.name = name;
+    }
+
     public int getMoves() {
-        return num_moves;
+        return moves;
     }
 
     public void incrementMoves() {
-        num_moves++;
+        moves++;
+    }
+
+    public void resetMoves() {
+        moves = 0;
     }
 }
