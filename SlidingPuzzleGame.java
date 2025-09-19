@@ -2,7 +2,6 @@ import java.util.Scanner;
 
 public class SlidingPuzzleGame extends Game {
     private SlidingPuzzleBoard board;
-    private Scanner scanner;
     private boolean playAgain;
 
     public void start() {
@@ -27,13 +26,12 @@ public class SlidingPuzzleGame extends Game {
         scanner.close();
     }
 
-    private void gameTurn() {
+    public void gameTurn() {
         while (!board.isSolved()){
             board.display();
-            System.out.print(String.format("%s. which tile do you want to slide to the empty space? ",
-                                            player.getName()));
-            int tile = scanner.nextInt();
-            scanner.nextLine();
+            String msg = String.format("%s, which tile do you want to slide to the empty space? ",
+                                        player.getName());
+            int tile = readInt(scanner, msg);
             if (!board.slideTile(tile)) {
                 System.out.println("INVALID TILE, TRY AGAIN");
             } else {
@@ -45,12 +43,8 @@ public class SlidingPuzzleGame extends Game {
     private void boardInput() {
         boolean validBoard = false;
         do {
-            System.out.print("Number of Rows? ");
-            int rows = scanner.nextInt();
-            scanner.nextLine();
-            System.out.print("Number of Columns? ");
-            int cols = scanner.nextInt();
-            scanner.nextLine();
+            int rows = readInt(scanner, "Number of Rows? ");
+            int cols = readInt(scanner, "Number of Cols? ");
             try {
                 board = new SlidingPuzzleBoard(rows, cols);
                 validBoard = true;
@@ -58,5 +52,17 @@ public class SlidingPuzzleGame extends Game {
                 System.out.println("Invalid size bounds, try again.");
             }
         } while(!validBoard);
+    }
+
+    private static int readInt(Scanner scanner, String msg) {
+        while (true) {
+            System.out.print(msg);
+            String in = scanner.nextLine().trim();
+            try {
+                return Integer.parseInt(in);
+            } catch (NumberFormatException e) {
+                System.out.println("Not a valid integer, try again.");
+            }
+        }
     }
 }

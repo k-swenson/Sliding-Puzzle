@@ -10,6 +10,7 @@ public class SlidingPuzzleBoard extends Board{
     private int[][] solvedState;
     private int emptyRow;
     private int emptyCol;
+    private int displayOffset;
     
     public SlidingPuzzleBoard(int rows, int cols) {
         super(rows, cols);
@@ -20,6 +21,7 @@ public class SlidingPuzzleBoard extends Board{
         makeSolvedState();
         resetBoard();
         shuffle();
+        this.displayOffset = calculateDigits(rows*cols-1);
     }
 
     protected boolean validSize(int rows, int cols) {
@@ -88,12 +90,32 @@ public class SlidingPuzzleBoard extends Board{
     }
 
     public void display() {
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < cols; c++) {
-                System.out.print(grid[r][c] + "\t");
+        StringBuilder divider = new StringBuilder();
+        // Build Divider
+        for (int c = 0; c < cols; c++) {
+            divider.append("+");
+            for (int i = 0; i < displayOffset; i++) {
+                divider.append("-");
             }
-            System.out.println();
         }
+        divider.append("+");
+
+        for (int r = 0; r < rows; r++) {
+            System.out.println(divider);
+            StringBuilder ln = new StringBuilder();
+            for (int c = 0; c < cols; c++) {
+                int tile = grid[r][c];
+                int offset = displayOffset - calculateDigits(tile);
+                StringBuilder empty = new StringBuilder();
+                for (int d = 0; d < offset; d++) {
+                    empty.append(" ");
+                }
+                ln.append(String.format("|%s%d", empty, tile));
+            }
+            ln.append("|");
+            System.out.println(ln);
+        }
+        System.out.println(divider);
     }
 
     public boolean isSolved() {
@@ -141,5 +163,12 @@ public class SlidingPuzzleBoard extends Board{
             }
         }
         return false;
+    }
+
+    private static int calculateDigits(int num) {
+        if (num == 0) {
+            return 1;
+        }
+        return (int) (Math.log10(num) + 1);
     }
 }
