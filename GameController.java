@@ -1,6 +1,10 @@
+import java.util.Scanner;
+
 public class GameController {
     public static void main(String[] args) {
-        SlidingPuzzleGame game = new SlidingPuzzleGame();
+        Scanner scanner = new Scanner(System.in);
+        Game game = GameFactory.createGame("slidingpuzzle", scanner);
         game.start();
+        scanner.close();
     }
 }

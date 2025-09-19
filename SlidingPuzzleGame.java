@@ -1,13 +1,15 @@
 import java.util.Scanner;
 
 public class SlidingPuzzleGame extends Game {
-    private SlidingPuzzleBoard board;
     private boolean playAgain;
+    private SlidingPuzzleBoard board;
+
+    public SlidingPuzzleGame(Scanner scanner) {
+        this.scanner = scanner;
+        this.playAgain = false;
+    }
 
     public void start() {
-        scanner = new Scanner(System.in);
-        playAgain = false;
-
         System.out.println("Welcome to the Sliding Puzzle Game!");
         System.out.print("What is your name? ");
         String playerName = scanner.nextLine();
@@ -20,10 +22,8 @@ public class SlidingPuzzleGame extends Game {
                                             player.getName(), player.getMoves()));
             String input = scanner.nextLine();
             input = input.toLowerCase();
-            playAgain = input.equals("y");
+            playAgain = input.equals("y") || input.equals("yes");
         } while (playAgain);
-
-        scanner.close();
     }
 
     public void gameTurn() {
@@ -33,7 +33,7 @@ public class SlidingPuzzleGame extends Game {
                                         player.getName());
             int tile = readInt(scanner, msg);
             if (!board.slideTile(tile)) {
-                System.out.println("INVALID TILE, TRY AGAIN");
+                System.out.println("Invalid tile number, try again.");
             } else {
                 player.incrementMoves();
             }
@@ -49,7 +49,7 @@ public class SlidingPuzzleGame extends Game {
                 board = new SlidingPuzzleBoard(rows, cols);
                 validBoard = true;
             } catch (IllegalArgumentException e) {
-                System.out.println("Invalid size bounds, try again.");
+                System.out.println(e.getMessage() + ", try again.");
             }
         } while(!validBoard);
     }

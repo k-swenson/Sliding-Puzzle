@@ -15,7 +15,7 @@ public class SlidingPuzzleBoard extends Board{
     public SlidingPuzzleBoard(int rows, int cols) {
         super(rows, cols);
         if (!validSize(rows, cols)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Rows and columns must be between " + ROW_MIN + " and " + ROW_MAX);
         }
         this.solvedState = new int[rows][cols];
         makeSolvedState();
@@ -86,6 +86,9 @@ public class SlidingPuzzleBoard extends Board{
             // Set empty tile coords
             emptyRow = random_pick[0];
             emptyCol = random_pick[1];
+        }
+        if (isSolved()) {
+            shuffle();
         }
     }
 
