@@ -1,18 +1,24 @@
 import java.util.*;
 
 public class Board {
+    private final int shuffle_num;
     private int num_rows;
     private int num_cols;
     private int[][] tiles;
     private int[][] solved_tiles;
+    private int empty_row;
+    private int empty_col;
     
     public Board(int rows, int cols) {
+        this.shuffle_num = SlidingPuzzle.SHUFFLE_NUM;
         this.num_rows = rows;
         this.num_cols = cols;
         this.tiles = new int[rows][cols];
         this.solved_tiles = new int[rows][cols];
+        this.empty_row = num_rows-1;
+        this.empty_col = num_cols-1;
         initialize();
-        shuffle();
+        shuffle(shuffle_num);
     }
 
     private void initialize() {
@@ -28,8 +34,41 @@ public class Board {
         tiles[num_rows - 1][num_cols - 1] = 0;
     }
 
-    public void shuffle() {
-        //TODO!
+    public void shuffle(int num_slides) {
+        Random random = new Random();
+
+        // Find all valid adjacent tiles
+        for (int i = 0; i < num_slides; i++) {
+            List<int[]> adjacent_tiles = new ArrayList<>();
+
+            if (empty_row > 0) { // Up
+                int[] adj = {empty_row-1, empty_col};
+                adjacent_tiles.add(adj);
+            }
+            if (empty_row < num_rows - 1) { // Down
+                int[] adj = {empty_row+1, empty_col};
+                adjacent_tiles.add(adj);
+            }
+            if (empty_col > 0) { // Left
+                int[] adj = {empty_row, empty_col-1};
+                adjacent_tiles.add(adj);
+            }
+            if (empty_col < num_cols - 1) { // Right
+                int[] adj = {empty_row, empty_col+1};
+                adjacent_tiles.add(adj);
+            }
+
+            // Randomly pick adjacent tile
+            int[] random_pick = adjacent_tiles.get(random.nextInt(adjacent_tiles.size()));
+
+            // Swap with empty tile
+            tiles[empty_row][empty_col] = tiles[random_pick[0]][random_pick[1]];
+            tiles[random_pick[0]][random_pick[1]] = 0;
+
+            // Set empty tile coords
+            empty_row = random_pick[0];
+            empty_col = random_pick[1];
+        }
     }
 
     public void display() {
@@ -85,30 +124,6 @@ public class Board {
                 }
             }
         }
-        throw new IllegalStateException("No empty space found on the board");
-    }
-
-    private Set<Integer> adjacentTiles() {
-        Set<Integer> adjacent = new HashSet<>();
-        for (int r = 0; r < num_rows; r++) {
-            for (int c = 0; c < num_cols; c++) {
-                if (tiles[r][c] == 0) { // Find the empty space
-                    // Check adjacent tiles
-                    if (r > 0) { // Up
-                        adjacent.add(tiles[r-1][c]);
-                    }
-                    if (r < num_rows - 1) { // Down
-                        adjacent.add(tiles[r+1][c]);
-                    }
-                    if (c > 0) { // Left
-                        adjacent.add(tiles[r][c-1]);
-                    }
-                    if (c < num_cols - 1) { // Right
-                        adjacent.add(tiles[r][c+1]);
-                    }
-                }
-            }
-        }
-        return adjacent;
+        return false;
     }
 }
