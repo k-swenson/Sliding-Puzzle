@@ -11,8 +11,15 @@ public class SlidingPuzzleGame extends Game {
 
     public void start() {
         System.out.println("Welcome to the Sliding Puzzle Game!");
-        System.out.print("What is your name? ");
-        String playerName = scanner.nextLine();
+        String playerName;
+        while (true) {
+            System.out.print("What is your name? ");
+            playerName = scanner.nextLine().trim();
+            if (!playerName.isEmpty()) {
+                break;
+            }
+            System.out.println("Name cannot be empty. Please enter a valid name.");
+        }
         player = new Player(playerName);
         do {
             player.resetMoves();

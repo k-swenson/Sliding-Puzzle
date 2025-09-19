@@ -50,46 +50,45 @@ public class SlidingPuzzleBoard extends Board{
     }
 
     public void shuffle() {
-        resetBoard();
-        int shuffles = rows * cols * rows * cols;
+        do {
+            resetBoard();
+            int shuffles = rows * cols * rows * cols;
 
-        Random random = new Random();
+            Random random = new Random();
 
-        // Find all valid adjacent tiles
-        for (int i = 0; i < shuffles; i++) {
-            List<int[]> adjacent_tiles = new ArrayList<>();
+            // Find all valid adjacent tiles
+            for (int i = 0; i < shuffles; i++) {
+                List<int[]> adjacent_tiles = new ArrayList<>();
 
-            if (emptyRow > 0) { // Up
-                int[] adj = {emptyRow-1, emptyCol};
-                adjacent_tiles.add(adj);
+                if (emptyRow > 0) { // Up
+                    int[] adj = {emptyRow - 1, emptyCol};
+                    adjacent_tiles.add(adj);
+                }
+                if (emptyRow < rows - 1) { // Down
+                    int[] adj = {emptyRow + 1, emptyCol};
+                    adjacent_tiles.add(adj);
+                }
+                if (emptyCol > 0) { // Left
+                    int[] adj = {emptyRow, emptyCol - 1};
+                    adjacent_tiles.add(adj);
+                }
+                if (emptyCol < cols - 1) { // Right
+                    int[] adj = {emptyRow, emptyCol + 1};
+                    adjacent_tiles.add(adj);
+                }
+
+                // Randomly pick adjacent tile
+                int[] random_pick = adjacent_tiles.get(random.nextInt(adjacent_tiles.size()));
+
+                // Swap with empty tile
+                grid[emptyRow][emptyCol] = grid[random_pick[0]][random_pick[1]];
+                grid[random_pick[0]][random_pick[1]] = 0;
+
+                // Set empty tile coords
+                emptyRow = random_pick[0];
+                emptyCol = random_pick[1];
             }
-            if (emptyRow < rows - 1) { // Down
-                int[] adj = {emptyRow+1, emptyCol};
-                adjacent_tiles.add(adj);
-            }
-            if (emptyCol > 0) { // Left
-                int[] adj = {emptyRow, emptyCol-1};
-                adjacent_tiles.add(adj);
-            }
-            if (emptyCol < cols - 1) { // Right
-                int[] adj = {emptyRow, emptyCol+1};
-                adjacent_tiles.add(adj);
-            }
-
-            // Randomly pick adjacent tile
-            int[] random_pick = adjacent_tiles.get(random.nextInt(adjacent_tiles.size()));
-
-            // Swap with empty tile
-            grid[emptyRow][emptyCol] = grid[random_pick[0]][random_pick[1]];
-            grid[random_pick[0]][random_pick[1]] = 0;
-
-            // Set empty tile coords
-            emptyRow = random_pick[0];
-            emptyCol = random_pick[1];
-        }
-        if (isSolved()) {
-            shuffle();
-        }
+        } while (isSolved());
     }
 
     public void display() {
@@ -172,6 +171,6 @@ public class SlidingPuzzleBoard extends Board{
         if (num == 0) {
             return 1;
         }
-        return (int) (Math.log10(num) + 1);
+        return (int) (Math.log10(Math.abs(num)) + 1);
     }
 }

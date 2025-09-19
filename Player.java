@@ -7,16 +7,15 @@ public class Player {
     }
 
     public Player(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Player name cannot be null or empty.");
+        }
         this.name = name;
         this.moves = 0;
     }
 
     public String getName() {
         return name;
-    }
-
-    public void changeName(String name) {
-        this.name = name;
     }
 
     public int getMoves() {
